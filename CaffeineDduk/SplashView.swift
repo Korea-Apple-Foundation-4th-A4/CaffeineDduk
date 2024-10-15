@@ -14,11 +14,17 @@ struct SplashView: View {
                 .edgesIgnoringSafeArea(.all)
             
             VStack {
-                Image(systemName: "star.fill")
-                    .font(.system(size: 100))
-                Text("카페인, 뚝!")
-                    .font(.title)
-                    .foregroundColor(.black)
+                Image("BabySplash")
+                    .resizable()
+                    .scaledToFit()
+                    .padding(.horizontal, 100)
+                
+                Image("Logo")
+                    .resizable()
+                    .scaledToFit()
+                    .padding(.horizontal, 130)
+                //                    .frame(maxWidth: UIScreen.main.bounds.width * 0.5)
+                
             }
         }
     }

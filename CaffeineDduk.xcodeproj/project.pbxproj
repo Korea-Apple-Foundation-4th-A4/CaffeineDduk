@@ -29,6 +29,23 @@
 		28FE57BB2CBA2CE6003BE029 /* CaffeineDdukUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CaffeineDdukUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		28757BD82CBD124A00BC086A /* Exceptions for "CaffeineDdukTests" folder in "CaffeineDdukTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				CaffeineDdukUITestsLaunchTests.swift,
+			);
+			target = 28FE57B02CBA2CE6003BE029 /* CaffeineDdukTests */;
+		};
+		28757BD92CBD124A00BC086A /* Exceptions for "CaffeineDdukTests" folder in "CaffeineDdukUITests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				CaffeineDdukUITestsLaunchTests.swift,
+			);
+			target = 28FE57BA2CBA2CE6003BE029 /* CaffeineDdukUITests */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		28FE57A32CBA2CE5003BE029 /* CaffeineDduk */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
@@ -37,6 +54,10 @@
 		};
 		28FE57B42CBA2CE6003BE029 /* CaffeineDdukTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				28757BD82CBD124A00BC086A /* Exceptions for "CaffeineDdukTests" folder in "CaffeineDdukTests" target */,
+				28757BD92CBD124A00BC086A /* Exceptions for "CaffeineDdukTests" folder in "CaffeineDdukUITests" target */,
+			);
 			path = CaffeineDdukTests;
 			sourceTree = "<group>";
 		};

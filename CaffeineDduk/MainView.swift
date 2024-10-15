@@ -4,16 +4,17 @@ import SwiftData
 
 struct MainView: View {
     @Query private var user: [User]  // SwiftData에서 User 데이터 가져오기
+    @StateObject private var viewModel = ContentViewModel()
     
     var body: some View {
         NavigationStack {
             VStack {
-                Text("MainView")
-                    .font(.largeTitle)
-                    .padding()
+                Text("말풍선")
                 
-                // 사용자 수 확인
-                Text("User count: \(user.count)")  // 사용자 수 표시
+                Image("BabyMain")
+                    .padding(.top,50)
+                
+                
                 
                 // 첫 번째 사용자의 이름을 가져오는 코드
                 if let firstUser = user.first {
@@ -21,7 +22,7 @@ struct MainView: View {
                         .font(.title)
                         .padding()
                 } else {
-                    Text("No user found.")  // 사용자가 없을 경우
+                    Text("노벨이")  // 사용자가 없을 경우
                         .font(.title)
                         .padding()
                 }
@@ -31,7 +32,7 @@ struct MainView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    NavigationLink(destination: SettingView()) {
+                    NavigationLink(destination: SettingView(viewModel: viewModel)) {
                         Image(systemName: "gearshape.fill")
                             .foregroundColor(.black)
                     }

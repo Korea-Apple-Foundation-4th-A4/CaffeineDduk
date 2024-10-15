@@ -20,3 +20,5 @@ final class NotificationSettings {
         self.notificationCount = notificationCount
     }
 }
+
+
