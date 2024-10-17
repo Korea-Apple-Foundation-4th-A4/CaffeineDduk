@@ -12,66 +12,128 @@ import UserNotifications
 struct OnboardingPageView: View {
     @ObservedObject var viewModel: ContentViewModel
     @Environment(\.modelContext) private var modelContext
+    @Query private var user: [User]
     @State private var enteredName: String = ""
     @State private var startTime: Date = Date()
     @State private var endTime: Date = Date().addingTimeInterval(120)
-    @State private var notificationCount: Int = 10  // 알림 개수 설정
+    @State private var notificationCount: Int = 10
+    @State private var showAlert: Bool = false
+    @State private var alertTitle: String = ""
     
     var body: some View {
         VStack {
             Image("BabyOnboarding")
                 .resizable()
                 .scaledToFit()
-                .padding(.horizontal,130)
-                .padding(.bottom,30)
-
+                .frame(maxWidth: UIScreen.main.bounds.width * 0.3)
+                .padding(.bottom,36)
+                .padding(.top, 36)
+            
             Text("예쁜 태명을 지어주세요")
                 .fontWeight(.bold)
-                .font(.system(size:20))
+                .font(.title)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 16)
             
-            TextField("이름을 입력하세요", text: $enteredName)
-                .padding()
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .frame(width: 200)
+            
+            TextField("여기에 입력하세요", text: $enteredName)
+                .foregroundColor(.black)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .frame(height: 60)
+                .padding(.horizontal, 16)
+                .background(Color.gray.opacity(0.2))
+                .cornerRadius(9)
+                .disableAutocorrection(true) // 자동수정 비활성화
+                .padding(.horizontal, 16)
+                .padding(.bottom, 36)
             
             Text("알림을 설정하세요")
                 .fontWeight(.bold)
-                .font(.system(size:20))
+                .font(.title)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 16)
             
-            
-            DatePicker("시작 시간", selection: $startTime, displayedComponents: .hourAndMinute)
-                .padding()
-            
-            DatePicker("종료 시간", selection: $endTime, displayedComponents: .hourAndMinute)
-                .padding()
-            
-            HStack {
-                Text("알림 개수: \(notificationCount)")  // 현재 알림 개수 표시
-                Stepper("", value: $notificationCount, in: 1...20)  // 알림 개수를 1에서 20까지 조정 가능
-                    .padding()
-            }
-            .padding()
-            
-            Button {
-                saveUserName()
-                saveNotificationSettings()  // 알림 설정 저장
-                viewModel.completeOnboarding()
-                scheduleNotifications()  // 여러 알림 예약
-            } label: {
-                Text("시작하기")
-                    .fontWeight(.bold)
+            // 주기 설정 뷰
+            ZStack {
+                RoundedRectangle(cornerRadius: 9)
+                    .fill(Color.gray.opacity(0.2))
+                    .frame(height: 60)
+                
+                HStack {
+                    Text("얼마나")
+                        .font(.headline)
+                    
+                    Stepper("", value: $notificationCount, in: 1...20)  // 알림 개수를 1에서 20까지 조정 가능
+                    
+                }
+                .padding(.horizontal, 16)
+                
+                Text("\(notificationCount)x") // 알림 개수 표시
+                    .font(.headline)
                     .foregroundColor(.black)
-                    .frame(width: 200, height: 50)
-                    .background(Color.accentColor)
-                    .cornerRadius(6)
             }
-            .padding()
+            .padding(.horizontal, 16)
+            
+            // 시간 설정 뷰
+            ZStack{
+                RoundedRectangle(cornerRadius: 9)
+                    .fill(Color.gray.opacity(0.2))
+                    .frame(height: 120)
+                VStack{
+                    DatePicker("시작 시간 :", selection: $startTime, displayedComponents: .hourAndMinute)
+                        .font(.headline)
+                    Divider()
+                    DatePicker("종료 시간 :", selection: $endTime, displayedComponents: .hourAndMinute)
+                        .font(.headline)
+                }
+                .padding(.horizontal, 16)
+            }
+            .padding(.horizontal, 16)
+            
+            Spacer()
+            
+            // 버튼
+            Button {
+                if textIsAppropriate() {
+                    saveUserName()
+                    saveNotificationSettings()  // 알림 설정 저장
+                    viewModel.completeOnboarding()
+                    scheduleNotifications()  // 여러 알림 예약
+                }
+            } label: {
+                Text("시작하기")                                                                 // 시작하기? 계속하기?
+                    .fontWeight(.bold)
+                    .font(.title)
+                    .foregroundColor(.black)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 60)
+                    .background(Color.accentColor)
+                    .cornerRadius(9)
+            }
+            .padding(.horizontal, 16)
+            .padding(.bottom, 36)
+        }
+        // 경고 표시
+        .alert(isPresented: $showAlert) {
+            Alert(title: Text(alertTitle))
         }
         .onAppear {
             requestNotificationPermission()
         }
     }
     
+    
+    // 태명 미입력시 경고
+    func textIsAppropriate() -> Bool {
+        if enteredName.count < 1 {
+            alertTitle = "예쁜 태명을 꼭 지어주세요"                                                  // 멘트 수정 필요
+            showAlert.toggle()
+            return false
+        }
+        return true
+    }
+    
+    // 태명 저장
     private func saveUserName() {
         let user = User(name: enteredName)
         modelContext.insert(user)
@@ -83,7 +145,7 @@ struct OnboardingPageView: View {
         }
     }
     
-    
+    // 알림 권한 요청
     private func requestNotificationPermission() {
         let center = UNUserNotificationCenter.current()
         center.requestAuthorization(options: [.alert, .sound]) { granted, error in
@@ -99,7 +161,7 @@ struct OnboardingPageView: View {
         }
     }
     
-    
+    // 알림 설정 저장
     private func saveNotificationSettings() {
         let settings = NotificationSettings(startTime: startTime, endTime: endTime, notificationCount: notificationCount)
         modelContext.insert(settings)
@@ -113,7 +175,7 @@ struct OnboardingPageView: View {
     
     
     
-    
+    // 알림 수신
     private func scheduleNotifications() {
         // 종료 시간이 시작 시간보다 이전일 경우 다음날로 조정
         let adjustedEndTime: Date
@@ -140,6 +202,8 @@ struct OnboardingPageView: View {
             } else {
                 triggerDate = notificationTime
             }
+            
+            
             
             let content = UNMutableNotificationContent()
             content.title = "안녕, 내 이름은 \(enteredName)(이)야!"

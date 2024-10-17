@@ -18,8 +18,8 @@ class ContentViewModel: ObservableObject {
 }
 
 struct ContentView: View {
-    @StateObject private var viewModel = ContentViewModel()  // viewModel 인스턴스 생성
-    @State private var isShowingSplash = true  // 스플래쉬 화면 표시 여부를 위한 상태 변수
+    @StateObject private var viewModel = ContentViewModel()
+    @State private var isShowingSplash = true
     
     var body: some View {
         ZStack {
@@ -34,7 +34,7 @@ struct ContentView: View {
                     }
             } else {
                 if viewModel.isFirstRun {
-                    OnboardingPageView(viewModel: viewModel)  // OnboardingPageView 호출
+                    OnboardingPageView(viewModel: viewModel)
                 } else {
                     MainView()  // MainView로 전환
                 }

@@ -17,14 +17,12 @@ struct SplashView: View {
                 Image("BabySplash")
                     .resizable()
                     .scaledToFit()
-                    .padding(.horizontal, 100)
+                    .frame(maxWidth: UIScreen.main.bounds.width * 0.4)
                 
                 Image("Logo")
                     .resizable()
                     .scaledToFit()
-                    .padding(.horizontal, 130)
-                //                    .frame(maxWidth: UIScreen.main.bounds.width * 0.5)
-                
+                    .frame(maxWidth: UIScreen.main.bounds.width * 0.4)
             }
         }
     }
