@@ -15,7 +15,6 @@ struct SettingView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
     @Query private var user: [User]
-    @Query private var notificationSettings: [NotificationSettings]
     @State private var modifiedName = ""
     @State private var startTime: Date = Date()
     @State private var endTime: Date = Date().addingTimeInterval(120)
@@ -24,6 +23,7 @@ struct SettingView: View {
     @State private var alertTitle: String = ""
     
     
+    @State private var selectedLanguage: String = "한국어" // 선택된 언어 상태 변수
     
     
     var body: some View {
@@ -42,7 +42,6 @@ struct SettingView: View {
                 .padding(.horizontal, 16)
             
             TextField("수정할 이름을 입력하세요", text: $modifiedName)
-                .foregroundColor(.black)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .frame(height: 60)
                 .padding(.horizontal, 16)
@@ -54,6 +53,9 @@ struct SettingView: View {
                 .onAppear {
                     if let firstUser = user.first {
                         modifiedName = firstUser.name
+                        startTime = firstUser.startTime  // 저장된 시작 시간 불러오기
+                        endTime = firstUser.endTime      // 저장된 종료 시간 불러오기
+                        notificationCount = firstUser.notificationCount // 저장된 주기 불러오기
                     } else {
                         modifiedName = "노벨이"
                     }
@@ -64,7 +66,6 @@ struct SettingView: View {
                 .font(.title)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 16)
-            
             // 주기 설정 뷰
             ZStack {
                 RoundedRectangle(cornerRadius: 9)
@@ -80,9 +81,8 @@ struct SettingView: View {
                 }
                 .padding(.horizontal, 16)
                 
-                Text("\(notificationCount)") // 알림 개수 표시
+                Text("\(notificationCount)x") // 알림 개수 표시
                     .font(.headline)
-                    .foregroundColor(.black)
             }
             .padding(.horizontal, 16)
             
@@ -107,7 +107,9 @@ struct SettingView: View {
             // 버튼
             Button {
                 if textIsAppropriate() {
-                    modifiedUserName()
+                    modifiedUser()
+                    NotificationSetting.shared.removeAllNotifications()
+                    NotificationSetting.shared.scheduleNotifications(enteredName: modifiedName, startTime: startTime, endTime: endTime, notificationCount: notificationCount)
                     viewModel.completeOnboarding()
                     dismiss()
                 }
@@ -150,7 +152,45 @@ struct SettingView: View {
                     }
                 }
             }
-            
+            ToolbarItem(placement: .primaryAction) {
+                Menu {
+                    Button {
+                        selectedLanguage = "한국어"
+                        print("한국어")
+                    } label: {
+                        if selectedLanguage == "한국어" {
+                            Label("한국어", systemImage: "checkmark")
+                        } else {
+                            Text("한국어")
+                        }
+                    }
+                    
+                    Button {
+                        selectedLanguage = "영어"
+                        print("영어")
+                    } label: {
+                        if selectedLanguage == "영어" {
+                            Label("영어", systemImage: "checkmark")
+                        } else {
+                            Text("영어")
+                        }
+                    }
+                    
+                    Button {
+                        selectedLanguage = "중국어"
+                        print("중국어")
+                    } label: {
+                        if selectedLanguage == "중국어" {
+                            Label("중국어", systemImage: "checkmark")
+                        } else {
+                            Text("중국어")
+                        }
+                    }
+                } label: {
+                    Label("언어설정", systemImage: "globe")
+                        .foregroundColor(.blue)
+                }
+            }
         }
         .alert(isPresented: $showAlert) {
             Alert(title: Text(alertTitle))
@@ -167,21 +207,25 @@ struct SettingView: View {
         return true
     }
     
-    
-    private func modifiedUserName() {
-        
-        //let user = User(name: modifiedName)
+    // 태명 및 시간 변경
+    private func modifiedUser() {
         guard let userFirst = user.first else { return }
         userFirst.name = modifiedName
+        userFirst.startTime = startTime
+        userFirst.endTime = endTime
+        userFirst.notificationCount = notificationCount
         modelContext.insert(userFirst)
         do {
             try modelContext.save()
-            //print("User modified: \(user.name)")
         } catch {
             print("Failed to save user: \(error)")
         }
     }
+    
+    
 }
+
+
 
 #Preview {
     SettingView(viewModel: ContentViewModel())

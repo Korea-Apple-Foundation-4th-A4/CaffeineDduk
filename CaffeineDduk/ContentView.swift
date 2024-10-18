@@ -5,7 +5,6 @@
 //  Created by 지지 on 10/12/24.
 //
 
-// ContentView.swift
 import SwiftUI
 import SwiftData
 

@@ -14,7 +14,7 @@ struct CaffeineDdukApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .modelContainer(for: [User.self, NotificationSettings.self])  // User 모델을 포함하는 모델 컨테이너 생성
+                .modelContainer(for: [User.self])  // User 모델을 포함하는 모델 컨테이너 생성
         }
     }
 }
@@ -34,3 +34,5 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         completionHandler([.banner, .sound])  // 배너와 사운드로 알림 표시
     }
 }
+
+

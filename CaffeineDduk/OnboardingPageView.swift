@@ -37,7 +37,6 @@ struct OnboardingPageView: View {
             
             
             TextField("여기에 입력하세요", text: $enteredName)
-                .foregroundColor(.black)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .frame(height: 60)
                 .padding(.horizontal, 16)
@@ -70,7 +69,6 @@ struct OnboardingPageView: View {
                 
                 Text("\(notificationCount)x") // 알림 개수 표시
                     .font(.headline)
-                    .foregroundColor(.black)
             }
             .padding(.horizontal, 16)
             
@@ -95,10 +93,9 @@ struct OnboardingPageView: View {
             // 버튼
             Button {
                 if textIsAppropriate() {
-                    saveUserName()
-                    saveNotificationSettings()  // 알림 설정 저장
+                    saveUser()
                     viewModel.completeOnboarding()
-                    scheduleNotifications()  // 여러 알림 예약
+                    NotificationSetting.shared.scheduleNotifications(enteredName: enteredName, startTime: startTime, endTime: endTime, notificationCount: notificationCount)
                 }
             } label: {
                 Text("시작하기")                                                                 // 시작하기? 계속하기?
@@ -133,18 +130,17 @@ struct OnboardingPageView: View {
         return true
     }
     
-    // 태명 저장
-    private func saveUserName() {
-        let user = User(name: enteredName)
+    private func saveUser() {
+        let user = User(name: enteredName, startTime: startTime, endTime: endTime, notificationCount: notificationCount)
         modelContext.insert(user)
         do {
             try modelContext.save()
-            print("User saved: \(user.name)")
+            print("User saved: \(user.name), Start: \(user.startTime), End: \(user.endTime), Count: \(user.notificationCount)")
         } catch {
             print("Failed to save user: \(error)")
         }
     }
-    
+
     // 알림 권한 요청
     private func requestNotificationPermission() {
         let center = UNUserNotificationCenter.current()
@@ -160,84 +156,6 @@ struct OnboardingPageView: View {
             }
         }
     }
-    
-    // 알림 설정 저장
-    private func saveNotificationSettings() {
-        let settings = NotificationSettings(startTime: startTime, endTime: endTime, notificationCount: notificationCount)
-        modelContext.insert(settings)
-        do {
-            try modelContext.save()
-            print("Notification settings saved: Start: \(settings.startTime), End: \(settings.endTime), Count: \(settings.notificationCount)")
-        } catch {
-            print("Failed to save notification settings: \(error)")
-        }
-    }
-    
-    
-    
-    // 알림 수신
-    private func scheduleNotifications() {
-        // 종료 시간이 시작 시간보다 이전일 경우 다음날로 조정
-        let adjustedEndTime: Date
-        if startTime > endTime {
-            adjustedEndTime = Calendar.current.date(byAdding: .day, value: 1, to: endTime)!
-        } else {
-            adjustedEndTime = endTime
-        }
-        
-        let totalNotifications = notificationCount
-        let totalDuration = adjustedEndTime.timeIntervalSince(startTime)
-        
-        // 알림 간격 계산
-        let interval = totalDuration / Double(totalNotifications)
-        
-        for i in 0..<totalNotifications {
-            let notificationTime = startTime.addingTimeInterval(Double(i) * interval)
-            
-            // 현재 시간이 알림 시간보다 이전인 경우
-            var triggerDate: Date
-            if notificationTime < Date() {
-                // 알림 시간 설정이 지나쳤으므로 다음 날로 설정
-                triggerDate = Calendar.current.date(byAdding: .day, value: 1, to: notificationTime)!
-            } else {
-                triggerDate = notificationTime
-            }
-            
-            
-            
-            let content = UNMutableNotificationContent()
-            content.title = "안녕, 내 이름은 \(enteredName)(이)야!"
-            content.body = "엄마 커피 한 잔 대신 사랑 한 잔 어때요?"
-            content.sound = .default
-            
-            // 매일 반복하도록 설정
-            var dateComponents = Calendar.current.dateComponents([.hour, .minute], from: triggerDate)
-            dateComponents.second = 0 // 초는 0으로 설정
-            
-            let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
-            
-            
-            let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
-            
-            UNUserNotificationCenter.current().add(request) { error in
-                if let error = error {
-                    print("알림 요청 추가 실패: \(error)")
-                } else {
-                    let dateFormatter = DateFormatter()
-                    dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss" // 원하는 형식으로 조정
-                    let formattedDate = dateFormatter.string(from: triggerDate)
-                    print("알림 요청 성공: \(formattedDate)") // 포맷된 시간 출력
-                }
-            }
-        }
-    }
-    
-    
-    
-    
-    
-    
-    
     
 }
 
