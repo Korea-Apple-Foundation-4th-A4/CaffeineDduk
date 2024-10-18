@@ -14,7 +14,6 @@ struct MainView: View {
     @State private var showText = false
     @State private var selectedSentence = ""
     
-    // 10개의 미리 정해진 문장 배열
     let sentences = [
         "엄마, 오늘은 커피 대신 사랑 한 잔 어때요?",
         "엄마, 내가 힘내게 커피 대신 사랑 한 잔 주세요",
@@ -38,7 +37,7 @@ struct MainView: View {
         "Let’s stay happy and healthy together, mom!",
         "Take a break, mom, and feel the love!"
     ]
-
+    
     
     var body: some View {
         NavigationStack {
@@ -47,11 +46,9 @@ struct MainView: View {
                     Image("BabyMain")
                         .padding(.top, 50)
                         .onTapGesture {
-                            // 이미지 클릭 시, 무작위 문장 선택 및 텍스트 표시
                             selectedSentence = sentences.randomElement() ?? "Hello"
                             showText = true
                             
-                            // 텍스트 숨기기
                             DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
                                 showText = false
                             }
@@ -59,25 +56,21 @@ struct MainView: View {
                     if showText {
                         Text(selectedSentence)
                             .font(.title)
-                            .background(Color.yellow.opacity(0.7))  // 텍스트 배경색 추가 (선택 사항)
+                            .background(Color.yellow.opacity(0.7))
                             .cornerRadius(10)
-                            .offset(y: -230)  // 이미지 위로 텍스트를 배치
+                            .offset(y: -230)
                     }
                 }
                 .padding(.top, 180)
                 
                 Spacer()
                 
-                
-                
-                
-                // 사용자의 이름을 가져오는 코드
                 if let firstUser = user.first {
-                    Text(firstUser.name)  // 첫 번째 사용자의 이름만 표시
+                    Text(firstUser.name)
                         .font(.title)
                         .padding()
                 } else {
-                    Text("노벨이")  // 사용자가 없을 경우
+                    Text("노벨이")
                         .font(.title)
                         .padding()
                 }

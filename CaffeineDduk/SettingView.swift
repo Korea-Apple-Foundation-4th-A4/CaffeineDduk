@@ -21,9 +21,7 @@ struct SettingView: View {
     @State private var notificationCount: Int = 10
     @State private var showAlert: Bool = false
     @State private var alertTitle: String = ""
-    
-    
-    @State private var selectedLanguage: String = "한국어" // 선택된 언어 상태 변수
+    @State private var selectedLanguage: String = "한국어"
     
     
     var body: some View {
@@ -53,9 +51,9 @@ struct SettingView: View {
                 .onAppear {
                     if let firstUser = user.first {
                         modifiedName = firstUser.name
-                        startTime = firstUser.startTime  // 저장된 시작 시간 불러오기
-                        endTime = firstUser.endTime      // 저장된 종료 시간 불러오기
-                        notificationCount = firstUser.notificationCount // 저장된 주기 불러오기
+                        startTime = firstUser.startTime
+                        endTime = firstUser.endTime
+                        notificationCount = firstUser.notificationCount
                     } else {
                         modifiedName = "노벨이"
                     }
@@ -81,7 +79,7 @@ struct SettingView: View {
                 }
                 .padding(.horizontal, 16)
                 
-                Text("\(notificationCount)x") // 알림 개수 표시
+                Text("\(notificationCount)x")
                     .font(.headline)
             }
             .padding(.horizontal, 16)
@@ -201,7 +199,7 @@ struct SettingView: View {
     private func textIsAppropriate() -> Bool {
         if modifiedName.isEmpty {
             alertTitle = "예쁜 태명을 꼭 지어주세요"
-            showAlert = true  // 알림 표시
+            showAlert = true
             return false
         }
         return true
@@ -224,7 +222,6 @@ struct SettingView: View {
     
     
 }
-
 
 
 #Preview {

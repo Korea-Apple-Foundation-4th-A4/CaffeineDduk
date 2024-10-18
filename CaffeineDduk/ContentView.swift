@@ -23,7 +23,7 @@ struct ContentView: View {
     var body: some View {
         ZStack {
             if isShowingSplash {
-                SplashView()  // 스플래쉬 화면
+                SplashView()
                     .onAppear {
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {  // 1초 후 스플래쉬 화면 제거
                             withAnimation {

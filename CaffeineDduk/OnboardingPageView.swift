@@ -62,12 +62,12 @@ struct OnboardingPageView: View {
                     Text("얼마나")
                         .font(.headline)
                     
-                    Stepper("", value: $notificationCount, in: 1...20)  // 알림 개수를 1에서 20까지 조정 가능
+                    Stepper("", value: $notificationCount, in: 1...20)
                     
                 }
                 .padding(.horizontal, 16)
                 
-                Text("\(notificationCount)x") // 알림 개수 표시
+                Text("\(notificationCount)x")
                     .font(.headline)
             }
             .padding(.horizontal, 16)
@@ -98,7 +98,7 @@ struct OnboardingPageView: View {
                     NotificationSetting.shared.scheduleNotifications(enteredName: enteredName, startTime: startTime, endTime: endTime, notificationCount: notificationCount)
                 }
             } label: {
-                Text("시작하기")                                                                 // 시작하기? 계속하기?
+                Text("시작하기")
                     .fontWeight(.bold)
                     .font(.title)
                     .foregroundColor(.black)
@@ -123,7 +123,7 @@ struct OnboardingPageView: View {
     // 태명 미입력시 경고
     func textIsAppropriate() -> Bool {
         if enteredName.count < 1 {
-            alertTitle = "예쁜 태명을 꼭 지어주세요"                                                  // 멘트 수정 필요
+            alertTitle = "예쁜 태명을 꼭 지어주세요"
             showAlert.toggle()
             return false
         }
