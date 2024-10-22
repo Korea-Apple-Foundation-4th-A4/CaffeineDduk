@@ -19,56 +19,6 @@ class NotificationSetting {
         UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
     }
     
-    // 알림 예약
-//    func scheduleNotifications(enteredName: String, startTime: Date, endTime: Date, notificationCount: Int) {
-//        // 종료 시간이 시작 시간보다 빠른 경우, 다음날로 조정
-//        let adjustedEndTime: Date
-//        if startTime > endTime {
-//            adjustedEndTime = Calendar.current.date(byAdding: .day, value: 1, to: endTime)!
-//        } else {
-//            adjustedEndTime = endTime
-//        }
-//        
-//        // 총 기간 및 간격 계산
-//        let totalDuration = adjustedEndTime.timeIntervalSince(startTime)
-//        let interval = totalDuration / Double(notificationCount)
-//
-//        // 알림 예약
-//        for i in 0..<notificationCount {
-//            let notificationTime = startTime.addingTimeInterval(Double(i) * interval)
-//
-//            // 알림이 현재 시간보다 이전인 경우, 다음날로 조정
-//            let triggerDate: Date
-//            if notificationTime < Date() {
-//                triggerDate = Calendar.current.date(byAdding: .day, value: 1, to: notificationTime)!
-//            } else {
-//                triggerDate = notificationTime
-//            }
-//
-//            let content = UNMutableNotificationContent()
-//            content.title = "카페인뚝"
-//            let randomSentence = Sentences.all.randomElement() ?? "엄마, 오늘은 커피 대신 사랑 한 잔 어때요?"
-//            content.body = "\(randomSentence) - \(enteredName)"
-//            content.sound = .default
-//
-//            var dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: triggerDate)
-//            dateComponents.second = 0
-//
-//            let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
-//            let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
-//
-//            UNUserNotificationCenter.current().add(request) { error in
-//                if let error = error {
-//                    print("알림 추가 실패: \(error)")
-//                } else {
-//                    let dateFormatter = DateFormatter()
-//                    dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-//                    let formattedDate = dateFormatter.string(from: triggerDate)
-//                    print("알림 요청 성공: \(formattedDate)")
-//                }
-//            }
-//        }
-//    }
     
     func scheduleNotifications(enteredName: String, startTime: Date, endTime: Date, notificationCount: Int) {
         
