@@ -16,31 +16,6 @@ struct MainView: View {
     @State private var selectedSentence = ""
     @State private var timer: Timer?
     
-    let sentences = [
-        "엄마, 오늘은 커피 대신 사랑 한 잔 어때요?",
-        "엄마, 내가 힘내게 커피 대신 사랑 한 잔 주세요",
-        "엄마, 오늘 커피 대신 사랑으로 하루를 채워봐요!",
-        "오늘은 엄마에게 기분 좋은 일이 가득할 거예요!",
-        "신은 모든 곳에 있을 수 없기에 엄마를 만들었대요.",
-        "엄마, 사랑해요! 오늘을 환하게 만들어봐요!",
-        "엄마, 오늘도 활짝 웃어봐요! 제가 응원할게요!",
-        "엄마, 오늘 하루도 따뜻하게 보내요!",
-        "엄마, 힘들 땐 제가 엄마를 꼭 안아줄게요",
-        "妈妈，我爱你，今天也要健康哦!",
-        "妈妈，喝果汁吧!",
-        "妈妈，今天喝一杯爱，替代咖啡，好吗?",
-        "喝水吧妈妈，这样我们都会更健康!",
-        "Mom, how about a cup of love instead of coffee today?",
-        "Mom, I love you! Let’s brighten today together!",
-        "Today will be full of good things for you, mom!",
-        "God couldn’t be everywhere, so He made mothers",
-        "Mom, smile big today! I’m cheering you on!",
-        "Mom, have a warm and wonderful day!",
-        "Let’s stay happy and healthy together, mom!",
-        "Take a break, mom, and feel the love!"
-    ]
-    
-    
     var body: some View {
         NavigationStack {
             VStack {
@@ -49,7 +24,7 @@ struct MainView: View {
                         .padding(.top, 50)
                         .onTapGesture {
                             
-                            selectedSentence = sentences.randomElement() ?? "Hello"
+                            selectedSentence = Sentences.all.randomElement() ?? "엄마, 오늘은 커피 대신 사랑 한 잔 어때요?"
                             showText = true
                             
                             // 진동 발생

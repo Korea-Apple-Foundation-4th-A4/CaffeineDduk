@@ -31,7 +31,7 @@ struct OnboardingPageView: View {
             
             Text("예쁜 태명을 지어주세요")
                 .fontWeight(.bold)
-                .font(.title)
+                .font(.title2)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 16)
             
@@ -48,7 +48,7 @@ struct OnboardingPageView: View {
             
             Text("알림을 설정하세요")
                 .fontWeight(.bold)
-                .font(.title)
+                .font(.title2)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 16)
             
