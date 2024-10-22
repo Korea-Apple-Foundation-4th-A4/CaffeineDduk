@@ -19,6 +19,7 @@ struct OnboardingPageView: View {
     @State private var notificationCount: Int = 10
     @State private var showAlert: Bool = false
     @State private var alertTitle: String = ""
+    private let maxCharacterCount = 10
     
     var body: some View {
         VStack {
@@ -36,15 +37,28 @@ struct OnboardingPageView: View {
                 .padding(.horizontal, 16)
             
             
-            TextField("여기에 입력하세요", text: $enteredName)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .frame(height: 60)
-                .padding(.horizontal, 16)
-                .background(Color.gray.opacity(0.2))
-                .cornerRadius(9)
-                .disableAutocorrection(true) // 자동수정 비활성화
-                .padding(.horizontal, 16)
-                .padding(.bottom, 36)
+            ZStack {
+                TextField("여기에 입력하세요", text: $enteredName)
+                    .frame(height: 60)
+                    .padding(.horizontal, 16)
+                    .background(Color.gray.opacity(0.2))
+                    .cornerRadius(9)
+                    .disableAutocorrection(true)
+                    .onChange(of: enteredName) { oldValue, newValue in
+                        if newValue.count > maxCharacterCount {
+                            enteredName = String(newValue.prefix(maxCharacterCount))
+                        }
+                    }
+                HStack {
+                    Spacer()
+                    Text("\(enteredName.count)/\(maxCharacterCount)")
+                        .foregroundColor(.gray)
+                        .padding(.trailing, 16)
+                }
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.horizontal, 16)
+            .padding(.bottom, 36)
             
             Text("알림을 설정하세요")
                 .fontWeight(.bold)

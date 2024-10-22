@@ -24,12 +24,12 @@ class NotificationSetting {
         
         // 시작시간과 종료시간에서 시간 컴포넌트 추출
         let calendar = Calendar.current
-        var startComponents = calendar.dateComponents([.hour, .minute, .second], from: startTime)
-        var endComponents = calendar.dateComponents([.hour, .minute, .second], from: endTime)
+        let startComponents = calendar.dateComponents([.hour, .minute, .second], from: startTime)
+        let endComponents = calendar.dateComponents([.hour, .minute, .second], from: endTime)
         
         // 현재 날짜 기준으로 시작/종료 시간 생성
         let today = Date()
-        var todayStartTime = calendar.date(bySettingHour: startComponents.hour ?? 0,
+        let todayStartTime = calendar.date(bySettingHour: startComponents.hour ?? 0,
                                          minute: startComponents.minute ?? 0,
                                          second: startComponents.second ?? 0,
                                          of: today)!
@@ -64,7 +64,7 @@ class NotificationSetting {
             content.sound = .default
             
             // 시간 컴포넌트 추출 (초 단위 포함)
-            var triggerComponents = calendar.dateComponents([.hour, .minute, .second], from: notificationTime)
+            let triggerComponents = calendar.dateComponents([.hour, .minute, .second], from: notificationTime)
             
             let trigger = UNCalendarNotificationTrigger(dateMatching: triggerComponents, repeats: true)
             let request = UNNotificationRequest(identifier: "DailyCaffeine_\(i)", content: content, trigger: trigger)

@@ -22,6 +22,7 @@ struct SettingView: View {
     @State private var showAlert: Bool = false
     @State private var alertTitle: String = ""
     @State private var selectedLanguage: String = "한국어"
+    private let maxCharacterCount = 10
     
     
     var body: some View {
@@ -39,25 +40,43 @@ struct SettingView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 16)
             
-            TextField("수정할 이름을 입력하세요", text: $modifiedName)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .frame(height: 60)
-                .padding(.horizontal, 16)
-                .background(Color.gray.opacity(0.2))
-                .cornerRadius(9)
-                .disableAutocorrection(true)
-                .padding(.horizontal, 16)
-                .padding(.bottom, 36)
-                .onAppear {
-                    if let firstUser = user.first {
-                        modifiedName = firstUser.name
-                        startTime = firstUser.startTime
-                        endTime = firstUser.endTime
-                        notificationCount = firstUser.notificationCount
-                    } else {
-                        modifiedName = "노벨이"
+            
+            ZStack {
+                TextField("수정할 이름을 입력하세요", text: $modifiedName)
+                    .frame(height: 60)
+                    .padding(.horizontal, 16)
+                    .background(Color.gray.opacity(0.2))
+                    .cornerRadius(9)
+                    .disableAutocorrection(true)
+                    .onAppear {
+                        if let firstUser = user.first {
+                            modifiedName = firstUser.name
+                            startTime = firstUser.startTime
+                            endTime = firstUser.endTime
+                            notificationCount = firstUser.notificationCount
+                        } else {
+                            modifiedName = "노벨이"
+                        }
                     }
+                    .onChange(of: modifiedName) { oldValue, newValue in
+                        if newValue.count > maxCharacterCount {
+                            modifiedName = String(newValue.prefix(maxCharacterCount))
+                        }
+                    }
+                HStack {
+                    Spacer()
+                    Text("\(modifiedName.count)/\(maxCharacterCount)")
+                        .foregroundColor(.gray)
+                        .padding(.trailing, 16)
                 }
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.horizontal, 16)
+            .padding(.bottom, 36)
+            
+            
+            
+            
             
             Text("알림을 설정하세요")
                 .fontWeight(.bold)
